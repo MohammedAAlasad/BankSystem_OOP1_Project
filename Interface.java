@@ -8,6 +8,7 @@ public class Interface {
     public static void main(String[] args) {
 
         Bank bankFunctions = new Bank();
+        User userFunctions = new User();
 
         int bank_menu_choice ; 
         int user_menu_choice , user_function_choice ;
@@ -30,7 +31,7 @@ public class Interface {
             System.out.println("4. Exit");
             System.out.print("Enter choice: ");
 
-            bank_menu_choice = bankFunctions.check_Menus_Input() ;
+            bank_menu_choice = bankFunctions.checkMenusInput() ;
 
             // اول صفحه (موظف او عميل او خروج) 
             switch (bank_menu_choice) {
@@ -44,11 +45,12 @@ public class Interface {
                     System.out.println("1. Login");
                     System.out.println("2. Create Account");
                     System.out.println("3. Back");
-                    user_menu_choice = bankFunctions.check_Menus_Input() ;
+                    user_menu_choice = bankFunctions.checkMenusInput() ;
                     switch (user_menu_choice) {
 
                         //دخول
                         case 1 :
+
                         
                         //لوب الحساب حق العميل
                         do{
@@ -60,22 +62,36 @@ public class Interface {
                             System.out.println("5. Back");
 
                             
-                            user_function_choice = bankFunctions.check_Menus_Input() ;
+                            user_function_choice = bankFunctions.checkMenusInput() ;
                             switch (user_function_choice) {
                                 // سحب
                                 case 1 :
+                                System.out.println("HOW MUCH DO YOU WANT DO YOU WANT TO WITHDRAW? :");
+                                double amount = input.nextDouble() ;
+                                input.nextLine();
+                                userFunctions.withdraw(amount);
+                                amount = 0 ; 
                                 break;
 
                                 //ايداع
                                 case 2 :
+                                System.out.println("HOW MUCH DO YOU WANT DO YOU WANT TO WITHDRAW? :");
+                                amount = input.nextDouble() ;
+                                input.nextLine();
+                                userFunctions.deposit(amount);
+                                amount = 0 ; 
                                 break;
 
                                 //كشف حساب
                                 case 3 :
+                                userFunctions.showStatus_withoutBalance() ;
                                 break;
 
                                 //حذف حساب
                                 case 4 : 
+                                System.out.println("Enter The User ID");
+                                int deletedUserId = input.nextInt() ;
+                                bankFunctions.deleteUser(deletedUserId);
                                 break ; 
 
                                 //رجوع للخلف
@@ -84,6 +100,7 @@ public class Interface {
 
                                 //ادخال غلط
                                 default:
+                                System.out.println("Invalid input, please enter a valid input");
                             }
                         }while(user_function_choice != 5) ; 
                         break ;
@@ -130,6 +147,7 @@ public class Interface {
 
                         //ادخال غلط
                         default:
+                        System.out.println("Invalid input, please enter a valid input");
                     }
 
                 }while(user_menu_choice != 3 ) ;
@@ -141,13 +159,13 @@ public class Interface {
                 case 2 :
                         //لوب صفحة الموظف
                         do{
-                            employee_menu_choice = bankFunctions.check_Menus_Input() ;
+                            employee_menu_choice = bankFunctions.checkMenusInput() ;
                             switch (employee_menu_choice) {
                                 // تسجيل دخول
                                 case 1 :
                                 // لوب حساب الموظف
                                 do{
-                                    employee_function_choice = bankFunctions.check_Menus_Input() ;
+                                    employee_function_choice = bankFunctions.checkMenusInput() ;
 
                                     switch (employee_function_choice) {
                                         // انشاء حساب لعميل
@@ -207,6 +225,7 @@ public class Interface {
 
                                         //ادخال غلط
                                         default:
+                                        System.out.println("Invalid input, please enter a valid input");
                                         
                                     }
                                 }while(employee_function_choice != 4 ) ; 
@@ -217,6 +236,7 @@ public class Interface {
 
                                 //ادخال غلط
                                 default:
+                                System.out.println("Invalid input, please enter a valid input");
                             }
                         }while(employee_menu_choice != 2) ; 
                 break; 
@@ -232,7 +252,7 @@ public class Interface {
                 System.out.println("5. Back");
                     
                 do{
-                    admin_function_choice = bankFunctions.check_Menus_Input() ; 
+                    admin_function_choice = bankFunctions.checkMenusInput() ; 
                     switch (admin_function_choice) {
                         case 1:
                         System.out.println(" Please Enter Employee ID ");
@@ -286,6 +306,7 @@ public class Interface {
                         break;
                     
                         default:
+                        System.out.println("Invalid input, please enter a valid input");
                     }
                 }while(admin_function_choice != 5 );
 
@@ -300,6 +321,7 @@ public class Interface {
 
                 //ادخال غلط
                 default:
+                System.out.println("Invalid input, please enter a valid input");
 
             }
 
