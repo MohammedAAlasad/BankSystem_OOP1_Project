@@ -63,6 +63,15 @@ public class Bank {
         }
         System.out.println("User not found: " + userId);
     }
+
+    public boolean checkIfExisit(int userId) {
+        for (User u : users) {
+            if (u.getID() == userId) {
+                return true; 
+            }
+        }
+        return false ; 
+    }
     
 
     public void addEmployee(Employee emp){

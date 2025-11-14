@@ -41,19 +41,24 @@ public class Interface {
 
                 // لوب صفحة العميل 
                 do{
+
                     System.out.println("\nUser Menu:");
                     System.out.println("1. Login");
                     System.out.println("2. Create Account");
-                    System.out.println("3. Back");
+                    System.out.println("3. Back"); 
                     user_menu_choice = bankFunctions.checkMenusInput() ;
                     switch (user_menu_choice) {
 
                         //دخول
                         case 1 :
 
-                        
-                        //لوب الحساب حق العميل
-                        do{
+                        System.out.println("Please Enter Your ID:");
+                        int idForLogin = input.nextInt() ;
+                        System.out.println("Please Enter Your Password:");
+                        int passForLogin = input.nextInt() ;
+                        bankFunctions.checkMenusInput(idForLogin);
+                        if(bankFunctions.checkIfExisit(idForLogin) == true ){
+                            do{
                             System.out.println("\nAccount Menu:");
                             System.out.println("1. Withdraw");
                             System.out.println("2. Deposit");
@@ -103,6 +108,11 @@ public class Interface {
                                 System.out.println("Invalid input, please enter a valid input");
                             }
                         }while(user_function_choice != 5) ; 
+                        }
+
+                        
+                        //لوب الحساب حق العميل
+                        
                         break ;
 
 
