@@ -5,13 +5,13 @@ import java.util.*;
 
 public class Bank {
 
-    Scanner input = new Scanner(System.in) ;
+Scanner input = new Scanner(System.in) ;
 
 
-    ArrayList<User> users = new ArrayList<>() ;
-    ArrayList<Employee> employees = new ArrayList<>() ;
+ArrayList<User> users = new ArrayList<>() ;
+ArrayList<Employee> employees = new ArrayList<>() ;
 
-        public void addEmployee(Employee emp) {
+public void addEmployee(Employee emp) {
         String sql = "INSERT INTO employees(employee_id, fullname, username, gender, password) VALUES(?, ?, ?, ?, ?)";
 
         try (Connection conn = Database.connect();
@@ -30,7 +30,8 @@ public class Bank {
             System.out.println("Error adding employee: " + e.getMessage());
         }
     }
-    public void deleteEmployee(int employeeId) {
+
+public void deleteEmployee(int employeeId) {
     String sql = "DELETE FROM employees WHERE employee_id = ?";
 
     try (Connection conn = Database.connect();
@@ -48,7 +49,8 @@ public class Bank {
         System.out.println("Error deleting employee: " + e.getMessage());
     }
 }
- public void addSalary(Employee emp) {
+
+public void addSalary(Employee emp) {
         String sql = "INSERT INTO employees_salary(employee_id, salary) VALUES(?, ?)";
 
         try (Connection conn = Database.connect();
@@ -64,7 +66,8 @@ public class Bank {
             System.out.println("Error adding salary: " + e.getMessage());
         }
     }   
-    public void deleteEmployeeSalary(int employeeId) {
+    
+public void deleteEmployeeSalary(int employeeId) {
     String sql = "DELETE FROM employees_salary WHERE employee_id = ?";
 
     try (Connection conn = Database.connect();
@@ -80,9 +83,7 @@ public class Bank {
     }
 }
 
-
-
-     public void addUser(User user) {
+public void addUser(User user) {
         String sql = "INSERT INTO users(user_id, fullname, username, gender, password) VALUES(?, ?, ?, ?, ?)";
 
         try (Connection conn = Database.connect();
@@ -102,7 +103,7 @@ public class Bank {
         }
     }
     
-    public void deleteUser(int userId) {
+public void deleteUser(int userId) {
     String sql = "DELETE FROM users WHERE user_id = ?";
 
     try (Connection conn = Database.connect();
@@ -120,7 +121,8 @@ public class Bank {
         System.out.println("Error deleting user: " + e.getMessage());
     }
 }
-     public void addAcc(User user) {
+
+public void addAcc(User user) {
         String sql = "INSERT INTO accounts(user_id, accNumber, balance) VALUES(?, ?, ?)";
 
         try (Connection conn = Database.connect();
@@ -141,7 +143,7 @@ public class Bank {
     }
 
 public void deleteAccount(int accountId) {
-    String sql = "DELETE FROM accounts WHERE acc_id = ?";
+    String sql = "DELETE FROM accounts WHERE user_id = ?";
 
     try (Connection conn = Database.connect();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -158,19 +160,8 @@ public void deleteAccount(int accountId) {
         System.out.println("Error deleting account: " + e.getMessage());
     }
 }
-
-
-    public boolean isIdTaken(int id) {
-        for (User u : users) {
-            if (u.getID() == id) {
-                return true; 
-            }
-        }
-        return false; 
-    }
     
-
-    public boolean checkGender(char gender){
+public boolean checkGender(char gender){
         gender = Character.toUpperCase(gender) ; 
         if(gender == 'M' || gender == 'F'){
             return true;
@@ -179,37 +170,41 @@ public void deleteAccount(int accountId) {
 
     }
 
-    public boolean isUsernameTaken(String userName) {
-        for (User u : users) {
-            if (u.getAccountName().equals(userName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public boolean isUsernameTakenEmp(String userName) {
-        for (Employee u : employees) {
-            if (u.getAccountName().equals(userName)) {
-                return true;
-            }
-        }
-        return false;
-    }
+public boolean isUsernameTaken(String username) {
+    String sql = "SELECT 1 FROM users WHERE username = ?";
 
-    public static boolean validateId(String id) {
-        for (Character c : id.toCharArray()) {
-            if (id == null || id.isEmpty()) {
-                System.out.println(" ID cannot be empty.");
-                return false;
-            }
-            else if (!Character.isDigit(c)) {
-                return false;
-            }
-        }
-        return true; 
-    }
+    try (Connection conn = Database.connect();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public static boolean validatePassword(String pass) {
+        stmt.setString(1, username);
+        ResultSet rs = stmt.executeQuery();
+
+        return rs.next();  // true = موجود، false = غير موجود
+
+    } catch (Exception e) {
+        System.out.println("Error checking username: " + e.getMessage());
+        return true; // safety: اعتبره موجود لو في خطأ
+    }
+}
+
+public boolean isUsernameTakenEmp(String username) {
+    String sql = "SELECT 1 FROM employees WHERE username = ?";
+
+    try (Connection conn = Database.connect();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setString(1, username);
+        ResultSet rs = stmt.executeQuery();
+
+        return rs.next();  // true = موجود، false = غير موجود
+
+    } catch (Exception e) {
+        System.out.println("Error checking username: " + e.getMessage());
+        return true; // safety: اعتبره موجود لو في خطأ
+    }
+}
+
+public static boolean validatePassword(String pass) {
         if (pass.isEmpty()) {
             System.out.println("❌ Please enter the password");
             return false;
@@ -238,93 +233,41 @@ public void deleteAccount(int accountId) {
         }
     }
 
+public boolean checkIfExisit(int userId) {
+    String sql = "SELECT 1 FROM users WHERE user_id = ?";
 
+    try (Connection conn = Database.connect();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
 
+        stmt.setInt(1, userId);
+        ResultSet rs = stmt.executeQuery();
 
-    public void addusers(User user) {
-        users.add(user) ;
-        System.out.println("User " + user.getFullName() + " added " );
+        return rs.next(); // true if found
+
+    } catch (Exception e) {
+        System.out.println("Error checking user: " + e.getMessage());
+        return false;
     }
-    public void addemployee(Employee emps) {
-        employees.add(emps) ;
-        System.out.println("Employee " + emps + " added to ");
+}
+
+public boolean checkIfExisitEmp(int empId) {
+    String sql = "SELECT 1 FROM employees WHERE employee_id = ?";
+
+    try (Connection conn = Database.connect();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setInt(1, empId);
+        ResultSet rs = stmt.executeQuery();
+
+        return rs.next();
+
+    } catch (Exception e) {
+        System.out.println("Error checking employee: " + e.getMessage());
+        return false;
     }
+}
 
-
-     public void creatAccount(User user , String accountNumber , double initialbalance ) {
-        Accounts account = new Accounts(accountNumber , initialbalance);
-        user.setAccount(account);
-    }
-
-
-
-    // public void deleteUser(int userId) {
-    //     for (int i = 0; i < users.size(); i++) {
-    //         if (users.get(i).getID() == userId) {
-    //             users.remove(i);
-    //             System.out.println("User " + userId + " deleted successfully.");
-    //             return; // stop after deleting
-    //         }
-    //     }
-    //     System.out.println("User not found: " + userId);
-    // }
-    // public void deleteEmployee(int empId){
-    //     for (int i = 0; i < employees.size(); i++) {
-    //         if (employees.get(i).getID() == empId) {
-    //             employees.remove(i);
-    //             System.out.println("Employee " + empId + " deleted successfully.");
-    //             return; // stop after deleting
-    //         }
-    //     }
-    //     System.out.println("Employee not found: " + empId);
-    // 
-    
-    public boolean checkIfExisit(int userId) {
-        for (User u : users) {
-            if (u.getID() == userId) {
-                return true; 
-            }
-        }
-        return false ; 
-    }
-    public boolean checkIfExisitEmp(int empid) {
-        for (Employee e : employees) {
-            if (e.getID() == empid) {
-                return true; 
-            }
-        }
-        return false ; 
-    }
-
-
-
-
-    public void findUserById(int userId) {
-        for (User u : users) {
-            if (u.getID() == userId) {
-                System.out.println("User found:");
-                System.out.println(u); 
-                return; 
-            }
-        }
-        System.out.println("User not found: " + userId);
-    }
-
-    public Accounts findEmployeeById(int empId) {
-        for (Employee e : employees) {
-            if (e.getID() == empId) {
-                System.out.println("Employee found:");
-                System.out.println(e);
-                break ;
-            }
-        }
-        System.out.println("Employee not found: " + empId);
-        return null;
-    }
-    
-
-
-    public int checkMenusInput() {
+public int checkMenusInput() {
         while (true) {
             try {
                 int inp = input.nextInt();
@@ -337,103 +280,7 @@ public void deleteAccount(int accountId) {
         }
     }
 
-    public User loginSuccess(int idForLogin, String passForLogin)
-    {
-        for (User u : users) {
-
-        if (u.getID() == idForLogin && u.getPassword().equals(passForLogin)){
-            return u;
-            }
-
-        }
-        return null;
-    }
-    
-    public Employee loginSuccessEmp(int idForLogin, String passForLogin)
-    {
-        for (Employee e : employees) {
-
-        if (e.getID() == idForLogin && e.getPassword().equals(passForLogin)){
-            return e;
-            }
-
-        }
-        return null;
-    }
-    
-    public void withdraw(User user, double amount) {
-    user.getAccount().withdraw(amount);
-    }
-    public void deposit(User user, double amount) {
-        user.getAccount().deposit(amount);
-    }
-    public void showAccount(User user) {
-    System.out.println("ID: " + user.getID());
-    System.out.println("Full Name: " + user.getFullName());
-    System.out.println("Current Balance: " + user.getAccount().getBalance());
-}
-public void showAccountByEmp(int user) {
-    for(User u : users){
-        if(user == u.getID()){
-            System.out.println("ID: " +u.getID());
-            System.out.println("Full name: " + u.getFullName());
-            System.out.println("gender: " + u.getGender());
-        }
-        else{
-            System.out.println("Invalid input. Please enter a correct ID:");
-        }
-    }
-
-}
-public void showAccountByAdmin(int user) {
-    for(User u : users){
-        if(user == u.getID()){
-            System.out.println("ID: " +u.getID());
-            System.out.println("Full name: " + u.getFullName());
-            System.out.println("gender: " + u.getGender());
-            System.out.println("Balance: " + u.getAccount().getBalance());
-        }
-        else{
-            System.out.println("Invalid input. Please enter a correct ID:");
-        }
-    }
-
-}
-public void showEmpByAdmin(int emp) {
-    for(Employee e : employees){
-        if(emp == e.getID()){
-            System.out.println("ID: " +e.getID());
-            System.out.println("Full name: " + e.getFullName());
-            System.out.println("gender: " + e.getGender());
-            System.out.println("salary: " + e.getSalary());
-        }
-        else{
-            System.out.println("Invalid input. Please enter a correct ID:");
-        }
-    }
-}
-
-   public void editsalary(int empid, double newsalary) {
-    boolean found = false;
-
-    if (newsalary <= 0) {
-        System.out.println("Invalid salary amount.");
-        return;
-    }
-
-    for (Employee e : employees) {
-        if (e.getID() == empid) {
-            e.setSalary(newsalary);
-            System.out.println("Salary updated successfully.");
-            found = true;
-            break;
-        }
-    }
-
-    
-}
-
-    public void showUserStat(int userId) {
+public void showUserStat(int userId) {
 
     // 1. Get user data
     String userSql = "SELECT fullname, username, gender FROM users WHERE user_id = ?";
@@ -482,6 +329,7 @@ public void showEmpByAdmin(int emp) {
         System.out.println("Error showing user status: " + e.getMessage());
     }
 }
+
 public void showUserStatByEmp(int userId) {
 
     // 1. Get user data
@@ -530,6 +378,7 @@ public void showUserStatByEmp(int userId) {
         System.out.println("Error showing user status: " + e.getMessage());
     }
 }
+
 public void showEmpStatByAdmin(int userId) {
 
     String userSql = "SELECT fullname, username, gender FROM employees WHERE employee_id = ?";
@@ -695,6 +544,7 @@ public boolean updateSalary(int employeeId, double amount) {
         return false;
     }
 }
+
 public String generateAccNumber() {
     String sql = "SELECT COUNT(*) AS total FROM accounts";
 
@@ -711,5 +561,76 @@ public String generateAccNumber() {
     }
 }
 
+public void loadUsersFromDB() {
+    String sql = "SELECT * FROM users";
+
+    try (Connection conn = Database.connect();
+         PreparedStatement pstmt = conn.prepareStatement(sql);
+         ResultSet rs = pstmt.executeQuery()) {
+
+        while (rs.next()) {
+            User user = new User(
+                rs.getInt("user_id"),
+                rs.getString("fullname"),
+                rs.getString("username"),
+                rs.getString("gender").charAt(0),
+                rs.getString("password")
+            );
+
+            // Load account for the user
+            String accSql = "SELECT accNumber, balance FROM accounts WHERE user_id = ?";
+            try (PreparedStatement accStmt = conn.prepareStatement(accSql)) {
+                accStmt.setInt(1, user.getID());
+                ResultSet accRs = accStmt.executeQuery();
+                if (accRs.next()) {
+                    Accounts acc = new Accounts(
+                        accRs.getString("accNumber"),
+                        accRs.getDouble("balance")
+                    );
+                    user.setAccount(acc);
+                }
+            }
+
+            users.add(user);
+        }
+
+    } catch (Exception e) {
+        System.out.println("Error loading users: " + e.getMessage());
+    }
+}
+
+public void loadEmployeesFromDB() {
+    String sql = "SELECT * FROM employees";
+
+    try (Connection conn = Database.connect();
+         PreparedStatement pstmt = conn.prepareStatement(sql);
+         ResultSet rs = pstmt.executeQuery()) {
+
+        while (rs.next()) {
+            Employee emp = new Employee(
+                rs.getInt("employee_id"),
+                rs.getString("fullname"),
+                rs.getString("username"),
+                rs.getString("gender").charAt(0),
+                rs.getString("password")
+            );
+
+            // Load salary
+            String salSql = "SELECT salary FROM employees_salary WHERE employee_id = ?";
+            try (PreparedStatement salStmt = conn.prepareStatement(salSql)) {
+                salStmt.setInt(1, emp.getID());
+                ResultSet salRs = salStmt.executeQuery();
+                if (salRs.next()) {
+                    emp.setSalary(salRs.getDouble("salary"));
+                }
+            }
+
+            employees.add(emp);
+        }
+
+    } catch (Exception e) {
+        System.out.println("Error loading employees: " + e.getMessage());
+    }
+}
 
 }

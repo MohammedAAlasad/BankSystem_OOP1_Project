@@ -52,7 +52,6 @@ public class DatabaseSetup {
         }
     }
 
-    // Optional main() if you want to manually run database creation once
     public static void main(String[] args) {
         setupDatabase();
     }

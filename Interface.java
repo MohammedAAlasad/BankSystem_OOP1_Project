@@ -5,11 +5,12 @@ public class Interface {
     static Scanner input = new Scanner(System.in);
 
     public static void main(String[] args) {
-    DatabaseSetup.setupDatabase();
-
-    
+        DatabaseSetup.setupDatabase();
 
         Bank bankFunctions = new Bank();
+        bankFunctions.loadUsersFromDB();    
+        bankFunctions.loadEmployeesFromDB();
+
 
         int bank_menu_choice;
         int user_menu_choice, user_function_choice;
@@ -493,7 +494,7 @@ public class Interface {
 
                                 System.out.println("Enter the new salary :");
                                 double newsalary = input.nextDouble();
-                                bankFunctions.editsalary(idforeditsalary, newsalary);
+                                // bankFunctions.editsalary(idforeditsalary, newsalary);
                                 bankFunctions.updateSalary(idforeditsalary , newsalary);
                                 break;
 
