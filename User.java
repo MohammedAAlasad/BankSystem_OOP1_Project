@@ -1,10 +1,13 @@
 public class User extends Person {
 
     private Accounts account;
+    public String name;
 
     public User(int ID, String fullName, String accountName, char gender, String password) {
         super(ID, fullName, accountName, gender, password);
     }
+
+
 
     public Accounts getAccount() {
         return account;

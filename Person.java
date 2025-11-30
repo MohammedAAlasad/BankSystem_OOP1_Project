@@ -12,6 +12,7 @@ public class Person {
         this.gender = gender ;
         this.password = password ;
         }
+        
     public int getID() {
         return ID;
     }
