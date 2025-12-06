@@ -4,7 +4,6 @@ import java.sql.Statement;
 
 public class DatabaseSetup {
 
-    // This method will be called automatically from Interface.main()
     public static void setupDatabase() {
         String url = "jdbc:sqlite:database/bank.db";
 

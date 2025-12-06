@@ -25,17 +25,14 @@ public class Interface {
 
         Admin theAdmin = new Admin(11111111, "Abdullah almouqhim", "ABdullah", 'M', "Abdullah@123");
 
-        // User fakeuser = new User(123456789, "ali omar", "Ali12345", 'M', "alipass123");
-        // bankFunctions.addUser(fakeuser);
-        // String accNum = bankFunctions.generateAccNumber();
-        // Accounts fakeaccount = new Accounts(accNum, 20000);
-        // fakeuser.setAccount(fakeaccount);
-        // bankFunctions.addAcc(fakeuser);
 
-        // Employee employee = new Employee(100100, "Mohammed Alasad", "MohaAlasad", 'M', "M1234");
-        // bankFunctions.addEmployee(employee);
-        // employee.setSalary(5000);
-        // bankFunctions.addSalary(employee);
+
+
+
+
+        // User Info For Test Login : ID: 22525501 , Pass: Kha12345
+        // Employee Info For Test Login : ID: 12121212 , Pass: Amal1234
+        // Admin Info For Test Login : ID: 11111111 , Pass: Abdullah@123
 
         System.out.println("\n\n\nWelcome to CS Bank System:");
 
@@ -75,7 +72,7 @@ public class Interface {
                                 User loggedInUser = bankFunctions.logindb(idForLogin, passForLogin);
 
                                 if (loggedInUser != null) {
-
+                                    accountMenu:
                                     do {
                                         System.out.println("\nAccount Menu:");
                                         System.out.println("1. Withdraw");
@@ -114,11 +111,14 @@ public class Interface {
                                                 System.out.println("Enter The User ID to Delete");
                                                 int deletedUserId = input.nextInt();
                                                 input.nextLine();
-                                                bankFunctions.deleteUser(deletedUserId);
 
                                                 if (deletedUserId == loggedInUser.getID()) {
-                                                    bankFunctions.deleteUser(deletedUserId);
-                                                    bankFunctions.deleteAccount(deletedUserId);
+                                                    bankFunctions.deleteUser(loggedInUser.getID());
+                                                    bankFunctions.deleteAccount(loggedInUser.getID());
+                                                    break accountMenu;
+                                                }
+                                                else{
+                                                    System.out.println("Wrong ID");
                                                 }
                                                 break;
 
@@ -149,8 +149,15 @@ public class Interface {
                                         input.nextLine();
                                         continue;
                                     }
-
+                                    
                                     enteredIdTest = input.nextInt();
+
+                                    if (String.valueOf(enteredIdTest).length() != 8) {
+                                        System.out.println("ID must be contains 8 digits");
+                                        continue;
+                                    } 
+                                    
+
                                     input.nextLine();
 
                                     if (enteredIdTest <= 0) {
@@ -192,7 +199,10 @@ public class Interface {
                                     }
                                 }
 
-                                System.out.println("Please Enter Password:");
+                                System.out.println("Enter Password:");
+                                System.out.println("The password must have at least eight characters");
+                                System.out.println("must contain only letters and digits");
+                                System.out.println("must contain at least two digit");
                                 String PassTest;
                                 while (true) {
                                     PassTest = input.nextLine().trim();
@@ -268,7 +278,10 @@ public class Interface {
 
                             enteredIdTest2 = input.nextInt();
                             input.nextLine();
-
+                            if (String.valueOf(enteredIdTest2).length() != 8) {
+                                System.out.println("ID must be contains 8 digits");
+                                continue; 
+                            } 
                             if (enteredIdTest2 <= 0) {
                                 System.out.println("ID must be positive.");
                                 continue;
@@ -309,6 +322,11 @@ public class Interface {
                         }
 
                         System.out.println("Enter Password:");
+                        System.out.println("The password must have at least eight characters");
+                        System.out.println("must contain only letters and digits");
+                        System.out.println("must contain at least two digit");
+
+
                         String PassTest2;
                         String enteredpasswordbyemp;
 
@@ -346,7 +364,7 @@ public class Interface {
 
                     case 3:
                         System.out.println("Enter The User ID to Delete");
-                        int  deletedUserId= input.nextInt();
+                        int deletedUserId= input.nextInt();
                         input.nextLine();
                         bankFunctions.deleteUser(deletedUserId);
                         bankFunctions.deleteAccount(deletedUserId);
@@ -365,7 +383,7 @@ public class Interface {
             System.out.println("Wrong ID or Password.");
         }
 
-    } while (false); // employee loop ends after login process
+    } while (false);
 
     break;
 
@@ -378,7 +396,7 @@ public class Interface {
                     String passForLogin = input.nextLine();
 
                     if (theAdmin.getID() == idForLogin && theAdmin.getPassword().equals(passForLogin)){
- do {
+                        do {
                         System.out.println("\nAdmin Menu:");
                         System.out.println("1. Create Employee Account");
                         System.out.println("2. Delete Employee Account");
@@ -403,7 +421,10 @@ public class Interface {
 
                                     enteredIdTest = input.nextInt();
                                     input.nextLine();
-
+                                    if (String.valueOf(enteredIdTest).length() != 8) {
+                                        System.out.println("ID must be contains 8 digits");
+                                        continue;
+                                    } 
                                     if (enteredIdTest <= 0) {
                                         System.out.println("ID must be positive.");
                                         continue;
@@ -443,7 +464,10 @@ public class Interface {
                                     }
                                 }
 
-                                System.out.println("Please Enter Password:");
+                                System.out.println("Enter Password:");
+                                System.out.println("The password must have at least eight characters");
+                                System.out.println("must contain only letters and digits");
+                                System.out.println("must contain at least two digit");                               
                                 String PassTest;
                                 while (true) {
                                     PassTest = input.nextLine().trim();
@@ -494,7 +518,6 @@ public class Interface {
 
                                 System.out.println("Enter the new salary :");
                                 double newsalary = input.nextDouble();
-                                // bankFunctions.editsalary(idforeditsalary, newsalary);
                                 bankFunctions.updateSalary(idforeditsalary , newsalary);
                                 break;
 

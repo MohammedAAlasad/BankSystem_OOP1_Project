@@ -20,7 +20,6 @@ public class Accounts {
     public String getAccNumber() { return accNumber; }
     public double getBalance() { return balance; }
 
-    // Deposit
     public void deposit(double amount) {
         if (amount <= 0) {
             System.out.println("Invalid deposit amount.");
@@ -31,7 +30,6 @@ public class Accounts {
         System.out.println("Deposit successful! New balance: " + balance);
     }
 
-    // Withdraw
     public void withdraw(double amount) {
         if (amount <= 0) {
             System.out.println("Invalid withdrawal amount.");
@@ -47,7 +45,6 @@ public class Accounts {
         System.out.println("Withdrawal successful! New balance: " + balance);
     }
 
-    // Update balance in SQLite
    
    
 

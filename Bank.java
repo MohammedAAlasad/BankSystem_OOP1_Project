@@ -17,11 +17,11 @@ public void addEmployee(Employee emp) {
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, emp.getID());               // NATIONAL ID
-            pstmt.setString(2, emp.getFullName());      // full name
-            pstmt.setString(3, emp.getAccountName());      // username
-            pstmt.setString(4, String.valueOf(emp.getGender())); // gender (convert char to string)
-            pstmt.setString(5, emp.getPassword());      // password
+            pstmt.setInt(1, emp.getID());              
+            pstmt.setString(2, emp.getFullName());      
+            pstmt.setString(3, emp.getAccountName());      
+            pstmt.setString(4, String.valueOf(emp.getGender())); 
+            pstmt.setString(5, emp.getPassword());      
 
             pstmt.executeUpdate();
             System.out.println("Employee added successfully!");
@@ -56,8 +56,8 @@ public void addSalary(Employee emp) {
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, emp.getID());       // same employee_id
-            pstmt.setDouble(2, emp.getSalary()); // salary value
+            pstmt.setInt(1, emp.getID());      
+            pstmt.setDouble(2, emp.getSalary()); 
 
             pstmt.executeUpdate();
             System.out.println("Salary added!");
@@ -89,11 +89,11 @@ public void addUser(User user) {
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, user.getID());               // NATIONAL ID
-            pstmt.setString(2, user.getFullName());      // full name
-            pstmt.setString(3, user.getAccountName());      // username
-            pstmt.setString(4, String.valueOf(user.getGender())); // gender (convert char to string)
-            pstmt.setString(5, user.getPassword());      // password
+            pstmt.setInt(1, user.getID());               
+            pstmt.setString(2, user.getFullName());    
+            pstmt.setString(3, user.getAccountName());     
+            pstmt.setString(4, String.valueOf(user.getGender())); 
+            pstmt.setString(5, user.getPassword());     
 
             pstmt.executeUpdate();
             System.out.println("user added successfully!");
@@ -179,11 +179,11 @@ public boolean isUsernameTaken(String username) {
         stmt.setString(1, username);
         ResultSet rs = stmt.executeQuery();
 
-        return rs.next();  // true = موجود، false = غير موجود
+        return rs.next();
 
     } catch (Exception e) {
         System.out.println("Error checking username: " + e.getMessage());
-        return true; // safety: اعتبره موجود لو في خطأ
+        return false; 
     }
 }
 
@@ -196,25 +196,25 @@ public boolean isUsernameTakenEmp(String username) {
         stmt.setString(1, username);
         ResultSet rs = stmt.executeQuery();
 
-        return rs.next();  // true = موجود، false = غير موجود
+        return rs.next();
 
     } catch (Exception e) {
         System.out.println("Error checking username: " + e.getMessage());
-        return true; // safety: اعتبره موجود لو في خطأ
+        return false;
     }
 }
 
 public static boolean validatePassword(String pass) {
         if (pass.isEmpty()) {
-            System.out.println("❌ Please enter the password");
+            System.out.println("Please enter the password");
             return false;
         }
         else if (pass.length() < 8) {
-            System.out.println("❌ The password must have at least eight characters");
+            System.out.println("The password must have at least eight characters");
             return false;
         }
         else if (!pass.matches("[A-Za-z0-9]+")) {
-            System.out.println("❌ Invalid password: must contain only letters and digits");
+            System.out.println("Invalid password: must contain only letters and digits");
             return false;
         }
         else {
@@ -225,7 +225,7 @@ public static boolean validatePassword(String pass) {
                 }
             }
             if (digitCount < 2) {
-                System.out.println("❌ Invalid password: must contain at least one digit");
+                System.out.println("Invalid password: must contain at least one digit");
                 return false;
             } else {
                 return true;
@@ -493,7 +493,6 @@ public User logindb(int userId, String password) {
                     u.setAccount(acc);
                 }
             }
-            // *****************************
 
             return u;
         } 
@@ -513,8 +512,8 @@ public boolean updateBalance(int userId, double amount) {
     try (Connection conn = Database.connect();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-        pstmt.setDouble(1, amount); // First ?
-        pstmt.setInt(2, userId);    // Second ?
+        pstmt.setDouble(1, amount); 
+        pstmt.setInt(2, userId);    
 
         int rowsAffected = pstmt.executeUpdate();
 
@@ -532,8 +531,8 @@ public boolean updateSalary(int employeeId, double amount) {
     try (Connection conn = Database.connect();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-        pstmt.setDouble(1, amount);     // First ?
-        pstmt.setInt(2, employeeId);    // Second ?
+        pstmt.setDouble(1, amount);     
+        pstmt.setInt(2, employeeId);    
 
         int rowsAffected = pstmt.executeUpdate();
 
@@ -546,18 +545,23 @@ public boolean updateSalary(int employeeId, double amount) {
 }
 
 public String generateAccNumber() {
-    String sql = "SELECT COUNT(*) AS total FROM accounts";
+    String sql = "SELECT accNumber FROM accounts ORDER BY accNumber DESC LIMIT 1";
 
     try (Connection conn = Database.connect();
          PreparedStatement stmt = conn.prepareStatement(sql);
          ResultSet rs = stmt.executeQuery()) {
 
-        int count = rs.getInt("total") + 1;
-        return "U" + count;
+        if (rs.next()) {
+            String last = rs.getString("accNumber");
+            int num = Integer.parseInt(last.substring(1)); 
+            return "U" + (num + 1);
+        } else {
+            return "U1"; 
+        }
 
     } catch (Exception e) {
         System.out.println("Error generating account number: " + e.getMessage());
-        return "U999999"; // fallback
+        return "U999999";
     }
 }
 
